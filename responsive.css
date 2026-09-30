@@ -1,0 +1,109 @@
+/* ==========================================================================
+   REC 517 | responsive.css
+   Layout changes by screen width (phones first, then larger screens),
+   plus reduced-motion support. Loaded after style.css.
+   ========================================================================== */
+
+/* ---------- Small phones (up to 479px) ---------- */
+@media (max-width: 479px) {
+  :root { --header-h: 68px; }
+  .brand img { height: 42px; }
+  .brand-name { font-size: 1.12rem; }
+  .btn-row .btn { width: 100%; }
+  .hero-copy .display { font-size: clamp(2.35rem, 11.5vw, 3.2rem); }
+  .fact-list li { grid-template-columns: 1fr; gap: .2rem; }
+  .facility-diagram .plan { grid-template-columns: 1fr; min-height: 0; }
+  .facility-diagram .zone { min-height: 150px; }
+  .facility-diagram .dim { display: none; }
+  .page-hero-mark { display: none; }
+  .timeline li { padding-left: 3.6rem; }
+  .timeline li::before { left: 1rem; }
+}
+
+/* ---------- Large phones and up (480px+) ---------- */
+@media (min-width: 480px) {
+  .partner-wall { grid-template-columns: repeat(3, 1fr); }
+  .inquiry-grid { grid-template-columns: repeat(2, 1fr); }
+  .inquiry.featured { grid-column: 1 / -1; }
+}
+
+/* ---------- Tablets (640px+) ---------- */
+@media (min-width: 640px) {
+  .grid-2, .grid-3, .grid-4, .sport-grid, .audience-grid { grid-template-columns: repeat(2, 1fr); }
+  .value-grid { grid-template-columns: repeat(2, 1fr); }
+  .program-grid { grid-template-columns: repeat(2, 1fr); }
+  .leader-grid { grid-template-columns: repeat(2, 1fr); }
+  .space-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-stats { grid-template-columns: repeat(2, 1fr); }
+  .form-grid.two { grid-template-columns: repeat(2, 1fr); }
+  .form-grid .full { grid-column: 1 / -1; }
+  .footer-grid { grid-template-columns: repeat(2, 1fr); }
+  .stats-strip { grid-template-columns: repeat(4, 1fr); }
+  .stats-strip .stat { padding-right: 1.25rem; }
+}
+
+/* ---------- Small laptops / landscape tablets (900px+) ---------- */
+@media (min-width: 900px) {
+  .split { grid-template-columns: 1fr 1fr; }
+  .split.wide-left { grid-template-columns: 1.15fr .85fr; }
+  .split.wide-right { grid-template-columns: .85fr 1.15fr; }
+  .hero-grid { grid-template-columns: 1.25fr .75fr; }
+  .hero-logo { width: min(34vw, 460px); }
+  .grid-3, .program-grid, .space-grid { grid-template-columns: repeat(3, 1fr); }
+  .grid-4, .sport-grid { grid-template-columns: repeat(4, 1fr); }
+  .audience-grid { grid-template-columns: repeat(3, 1fr); }
+  .value-grid { grid-template-columns: repeat(4, 1fr); }
+  .contact-grid { grid-template-columns: 1.35fr .65fr; }
+  .footer-grid { grid-template-columns: 1.4fr 1fr 1fr 1.3fr; }
+  .inquiry-grid { grid-template-columns: repeat(3, 1fr); }
+  .inquiry.featured { grid-column: auto; }
+  .cta-layout { display: grid; grid-template-columns: 1fr; }
+  .leader-grid { grid-template-columns: repeat(2, 1fr); }
+  .partner-wall { grid-template-columns: repeat(6, 1fr); }
+  .timeline { grid-template-columns: repeat(2, 1fr); }
+  .sticky-col { position: sticky; top: calc(var(--header-h) + 2rem); }
+}
+
+/* Audience grid: 7 cards, so the last row gets a wide highlight card */
+@media (min-width: 900px) {
+  .audience-grid .audience-card:last-child { grid-column: span 3; flex-direction: row; align-items: center; gap: 1.5rem; }
+  .audience-grid .audience-card:last-child .card-icon { margin: 0; }
+  .audience-grid .audience-card:last-child .share { margin: 0 0 0 auto; padding: 0; min-width: 240px; }
+}
+
+/* ---------- Desktop navigation (1120px+) ---------- */
+@media (min-width: 1120px) {
+  .nav-links { display: flex; }
+  .header-cta { display: inline-flex; }
+  .menu-toggle { display: none; }
+  .mobile-menu { display: none; }
+  .leader-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+/* ---------- Large desktop (1440px+) ---------- */
+@media (min-width: 1440px) {
+  :root { --maxw: 1320px; }
+  .hero-logo { width: 480px; }
+}
+
+/* ---------- Short, wide screens: keep the hero from feeling cramped ---------- */
+@media (min-width: 900px) and (max-height: 760px) {
+  .hero { min-height: 0; }
+}
+
+/* ---------- Reduced motion: no movement, content shows immediately ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; transition-delay: 0s !important; }
+  .js .reveal, .js .reveal-stagger > *, .js .hero-copy > *, .js .hero-logo { opacity: 1 !important; transform: none !important; }
+  .js .reveal-media { clip-path: none !important; }
+  .js .share-bar i { transform: none !important; }
+  .js .court-lines.draw [pathLength] { stroke-dashoffset: 0 !important; }
+}
+
+/* ---------- Print ---------- */
+@media print {
+  .site-header, .mobile-menu, .hero-bg, .footer-big, .skip-link { display: none !important; }
+  .hero, .page-hero, .section--angle { clip-path: none !important; background: #fff !important; color: #000 !important; margin: 0 !important; }
+  .js .reveal, .js .reveal-stagger > * { opacity: 1 !important; transform: none !important; }
+}
