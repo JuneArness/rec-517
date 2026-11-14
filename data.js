@@ -358,5 +358,29 @@ window.REC517 = {
     { key: "partnership", label: "Partnership" },
     { key: "community",   label: "Community Programs" },
     { key: "general",     label: "General Information" }
-  ]
+  ],
+
+  /* ------------------------------------------------------------------------
+     5. EVENTS + GET INVOLVED (database connection)
+     The Events page, the Sponsor / Donate / Volunteer forms and the Admin
+     page use a free Supabase project. Paste the two values from
+     Supabase > Project Settings > API Keys. Both are safe to publish.
+     NEVER paste the "secret" or "service_role" key anywhere in this site.
+     Until these are filled in, the Events page shows "coming soon" and the
+     forms say they were NOT sent (they never pretend).
+     ------------------------------------------------------------------------ */
+  supabaseUrl: "",   // EDIT: e.g. "https://abcdefghijkl.supabase.co"
+  supabaseKey: "",   // EDIT: the "publishable" key, starts with "sb_publishable_"
+
+  /* Online giving. Paste a payment link here (Stripe Payment Link, PayPal,
+     Square, Zeffy, etc.) to show a "Give online" button on the Donate tab.
+     Leave "" and the Donate tab shows only the "tell us how you'd like to
+     give" form. */
+  donateUrl: "",
+  donateButton: "Give online",
+
+  /* Shown under the Donate tab. REC 517 LLC is a limited liability company,
+     so gifts are not tax-deductible unless it works through a nonprofit
+     fiscal sponsor. If that changes, update this sentence. */
+  donateNote: "REC 517 LLC is a limited liability company, not a 501(c)(3) charity, so gifts to REC 517 are not tax-deductible."
 };

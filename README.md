@@ -6,12 +6,12 @@ nothing is invented, and projections are labeled as planned, projected or goals.
 plain HTML, CSS and JavaScript. There is no backend, no build step and no paid platform,
 and it runs on GitHub Pages.
 
-- **Pages:** Home, About, Programs, Facility, Impact, Contact, plus a 404 page
+- **Pages:** Home, About, Programs, Facility, **Events**, Impact, **Get Involved** (Sponsor / Donate / Volunteer), Contact, a private **Admin** page, plus a 404 page
 - **Fonts:** Archivo (headlines) and DM Sans (text), from Google Fonts
 - **Colors:** taken from the REC 517 logo (orange, teal, navy)
 - **Website developed by SAP Development Solutions, LLC**
 
-## Folder structure (39 files, one folder, no subfolders)
+## Folder structure (one folder, no subfolders)
 
 ```text
 rec-517/
@@ -43,6 +43,57 @@ rec-517/
 folders. Uploading through GitHub's website can silently drop folders, which breaks
 every page. A flat folder can't break that way. The files keep the prompt's names
 (`style.css`, `responsive.css`, `app.js`, `animations.js`, `data.js`).
+
+## Events, photos and Get Involved (added Nov 2026)
+
+| What | How it works |
+| --- | --- |
+| `events.html` | Upcoming events (soonest first) and past events with photo galleries. Tap an event for all its photos; full-screen viewer with swipe and arrow keys. |
+| `involved.html` | Three forms: **Become a Sponsor**, **Donate**, **Volunteer**. Each gives the visitor a reference number only after the form is saved. |
+| `admin.html` | Private. Sign in to add/edit events, upload photos from a **phone or computer** (pick many at once, or take one with the camera), add captions, pick the cover photo, reorder, delete. A **Forms** tab lists every Sponsor / Donate / Volunteer form with status, private notes, Email/Call/Text buttons and a CSV download. |
+| `rec517-setup.sql` | Creates the database, the photo storage and all security rules. Run once. |
+| `rec517-make-me-admin.sql` | Gives a login access to the Admin page. |
+| `rec-api.js`, `events.js`, `involved.js`, `admin.js`, `supabase.js` | The code behind the three pages. No need to edit. |
+
+Until it's connected, the Events page says "coming soon" and the forms clearly say **not sent**. Nothing pretends.
+
+### Connect it (about 15 minutes, free)
+
+Use **REC 517's own free Supabase account** (sign up at supabase.com with the business email) so the
+photos and form data belong to the business. You'll be added as the admin.
+
+1. **New project** → name it `rec-517` → save the database password somewhere safe → wait until it's ready.
+2. **SQL Editor → New query** → open `rec517-setup.sql`, copy ALL of it, paste, **Run**. You should see "Success".
+3. **Authentication → Sign In / Providers → Email**: turn **Allow new users to sign up** OFF. (Only admins need logins.)
+4. **Authentication → URL Configuration**: Site URL `https://junearness.github.io/rec-517/admin.html`. Add the same address under **Redirect URLs**.
+5. **Authentication → Users → Add user → Create new user**: your email + a strong password, tick **Auto Confirm User**.
+6. **SQL Editor → New query**: paste `rec517-make-me-admin.sql`, change the email to the one from step 5, **Run**. The result should list that email.
+7. **Project Settings → API Keys**: copy the **Project URL** and the **publishable** key (starts with `sb_publishable_`).
+   Paste them into `data.js` section 5 (`supabaseUrl`, `supabaseKey`). **Never** use the secret / service_role key.
+8. Upload the changed `data.js` to GitHub, wait 2 minutes, open `/admin.html`, press Ctrl+Shift+R and sign in.
+
+### Posting an event with photos (phone or computer)
+
+1. Open `https://junearness.github.io/rec-517/admin.html` and sign in. Tip: add it to your phone's home screen.
+2. **+ New event** → title, date (and time/location if you like) → **Save event**.
+3. Under **Photos**, tap **Choose photos** (select many at once) or **Take a photo**. On a computer you can also drag photos onto the box. iPhone photos are converted and every photo is resized automatically, so uploads are quick.
+4. Optional: add captions, tap ★ to choose the cover photo, use ← → to change the order.
+5. Tick **Published** → **Save event**. It's now on the Events page. Events whose date has passed move to "Past events" by themselves.
+
+### Online donations
+
+The Donate tab shows a **Give online** button only when `donateUrl` in `data.js` has a payment link
+(Stripe Payment Link, PayPal, Square, Zeffy…). Until then, people use the "how you'd like to give" form.
+`donateNote` says gifts aren't tax-deductible because REC 517 LLC isn't a 501(c)(3); change it if REC 517
+works through a nonprofit fiscal sponsor.
+
+### Good to know
+
+- **Free plan pause:** a free Supabase project pauses after about a week with no activity (as far as I know). Opening the
+  Admin page or the Events page counts as activity. If it pauses, the Events page shows a friendly message and you
+  press **Restore** in Supabase. Pro is about $25/month (estimate) if that becomes a problem.
+- **No email alerts yet:** new forms show as a red "new" count on the Admin page. Email alerts can be added later.
+- **Photos are public** once uploaded to a published event. Get permission before posting photos of minors.
 
 ## Step 1: Preview on your computer
 
