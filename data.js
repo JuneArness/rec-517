@@ -30,7 +30,7 @@ window.REC517 = {
 
     address: "",            // EDIT: official street address, e.g. "123 Main St, Jackson, MI 49201"
     phone: "",              // EDIT: e.g. "(517) 555-0123"
-    email: "",              // EDIT: e.g. "info@rec517.com"
+    email: "therec517@gmail.com",
     hours: "",              // EDIT: official hours once open, e.g. "Mon–Fri 7 AM–10 PM · Sat–Sun 8 AM–8 PM"
     googleBusinessUrl: "",  // EDIT: link to the Google Business Profile, once created
 
@@ -382,5 +382,35 @@ window.REC517 = {
   /* Shown under the Donate tab. REC 517 LLC is a limited liability company,
      so gifts are not tax-deductible unless it works through a nonprofit
      fiscal sponsor. If that changes, update this sentence. */
-  donateNote: "REC 517 LLC is a limited liability company, not a 501(c)(3) charity, so gifts to REC 517 are not tax-deductible."
+  donateNote: "REC 517 LLC is a limited liability company, not a 501(c)(3) charity, so gifts to REC 517 are not tax-deductible.",
+
+  /* ------------------------------------------------------------------------
+     6. PAST EVENTS BUILT INTO THE SITE
+     These show on the Events page even before the database is connected.
+     New events should be added in the Admin page instead. Photos are files
+     in this folder. Use date: "YYYY-MM-DD", or when: "Summer 2026" if the date is unknown.
+     ------------------------------------------------------------------------ */
+  pastEvents: [
+    {
+      title: "Hollywood Golf Comes to Jackson",
+      date: "2026-09-25",
+      time: "Registration 8:00 AM",
+      location: "Ella Sharp Park Golf Course, 1000 Ella Sharp Park Rd, Jackson, MI 49201",
+      summary: "The REC 517 presented Hollywood Golf, featuring Mrs. Selina Johnson and Friends: a day of golf competition, networking, a vendor marketplace, prizes and giveaways, food and entertainment.",
+      photos: [
+        { src: "event-golf-2026-01.jpg", caption: "The youth press team" },
+        { src: "event-golf-2026-02.jpg", caption: "Friends of REC 517 at the clubhouse" },
+        { src: "event-golf-2026-03.jpg", caption: "Press passes and notebooks ready" },
+        { src: "event-golf-2026-04.jpg", caption: "Arriving at the course" },
+        { src: "event-golf-2026-05.jpg", caption: "Check-in table" },
+        { src: "event-golf-2026-06.jpg", caption: "Gift bags and the raffle table" },
+        { src: "event-golf-2026-07.jpg", caption: "Golfers at the clubhouse" },
+        { src: "event-golf-2026-08.jpg", caption: "Heading to the carts" },
+        { src: "event-golf-2026-09.jpg", caption: "Inside the clubhouse" },
+        { src: "event-golf-2026-10.jpg", caption: "Welcome remarks" },
+        { src: "event-golf-2026-11.jpg", caption: "Ready to tee off" },
+        { src: "event-golf-2026-flyer.jpg", caption: "The event flyer" }
+      ]
+    }
+  ]
 };

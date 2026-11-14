@@ -6,6 +6,7 @@
 (function () {
   "use strict";
   var A = window.RAPI; if (!A) return;
+  var C = window.REC517 || {};
   var esc = A.esc, $ = function (s, r) { return (r || document).querySelector(s); };
   var up = $("[data-upcoming]"), past = $("[data-past]");
   if (!up || !past) return;
@@ -16,17 +17,24 @@
   var CAM = '<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 8h3l2-2.5h6L17 8h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13.5" r="3.5"/></svg>';
 
   function today() { var d = new Date(); return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  // Photos are either built into the site (src: a file in this folder) or uploaded in Admin (path).
+  function src(p) { if (!p) return ""; return p.src ? (/^[A-Za-z0-9._-]+\.(jpg|jpeg|png|webp)$/i.test(p.src) ? "./" + p.src : "") : A.photoUrl(p.path); }
+  function when(e) { return e.when || A.dateRange(e.event_date, e.end_date); }
+  var BUILT_IN = (C.pastEvents || []).map(function (e) {
+    return { title: e.title || "", event_date: e.date || null, when: e.when || "", time_text: e.time || "", location: e.location || "",
+      summary: e.summary || "", details: e.details || "", photos: (e.photos || []).filter(function (p) { return src(p); }) };
+  }).filter(function (e) { return e.title; });
   function isUpcoming(e) { var end = A.day(e.end_date) || A.day(e.event_date); return end && end >= today(); }
 
   function card(e, i, upcoming) {
-    var d = A.day(e.event_date), cover = A.photoUrl(e.cover) || A.photoUrl(e.photos[0] && e.photos[0].path), n = e.photos.length;
+    var d = A.day(e.event_date), cover = A.photoUrl(e.cover) || src(e.photos[0]), n = e.photos.length;
     var link = A.safeHttps(e.link_url);
     return '<article class="event-card' + (upcoming ? " is-upcoming" : "") + '">' +
       '<div class="event-media">' + (cover ? '<img src="' + esc(cover) + '" alt="" loading="lazy" decoding="async">' : '<span class="event-ph" aria-hidden="true">517</span>') +
       (d ? '<span class="date-badge" aria-hidden="true"><b>' + d.toLocaleDateString("en-US", { month: "short" }) + '</b>' + d.getDate() + '</span>' : "") +
       (n ? '<span class="photo-count">' + CAM + n + " photo" + (n === 1 ? "" : "s") + "</span>" : "") + "</div>" +
       '<div class="event-body"><h3>' + esc(e.title) + "</h3>" +
-      '<ul class="event-meta"><li>' + CAL + "<span>" + esc(A.dateRange(e.event_date, e.end_date)) + "</span></li>" +
+      '<ul class="event-meta"><li>' + CAL + "<span>" + esc(when(e)) + "</span></li>" +
       (e.time_text ? "<li>" + CLOCK + "<span>" + esc(e.time_text) + "</span></li>" : "") +
       (e.location ? "<li>" + PIN + "<span>" + esc(e.location) + "</span></li>" : "") + "</ul>" +
       (e.summary ? "<p>" + esc(e.summary) + "</p>" : "") +
@@ -51,10 +59,10 @@
   function openGallery(i) {
     var e = EVENTS[i]; if (!e) return; cur = e; lastFocus = document.activeElement;
     $("#gallery-title").textContent = e.title;
-    $("[data-gallery-meta]").textContent = [A.dateRange(e.event_date, e.end_date), e.time_text, e.location].filter(Boolean).join(" · ");
+    $("[data-gallery-meta]").textContent = [when(e), e.time_text, e.location].filter(Boolean).join(" · ");
     $("[data-gallery-details]").innerHTML = (e.details ? "<p>" + A.multiline(e.details) + "</p>" : e.summary ? "<p>" + esc(e.summary) + "</p>" : "");
     grid.innerHTML = e.photos.map(function (p, k) {
-      var u = A.photoUrl(p.path);
+      var u = src(p);
       return '<li><button type="button" class="thumb" data-photo="' + k + '" aria-label="Open photo ' + (k + 1) + " of " + e.photos.length + (p.caption ? ": " + esc(p.caption) : "") + '">' +
         '<img src="' + esc(u) + '" alt="" loading="lazy" decoding="async"></button></li>';
     }).join("");
@@ -72,12 +80,12 @@
   /* ---------- lightbox ---------- */
   var lb = $("#lightbox"), img = $("[data-lb-img]"), idx = 0, lbFrom = null;
   function show() {
-    var p = cur.photos[idx]; img.src = A.photoUrl(p.path);
+    var p = cur.photos[idx]; img.src = src(p);
     img.alt = p.caption || ("Photo " + (idx + 1) + " from " + cur.title);
     $("[data-lb-cap]").textContent = p.caption || "";
     $("[data-lb-count]").textContent = (idx + 1) + " / " + cur.photos.length;
     var single = cur.photos.length < 2; $("[data-lb-prev]").hidden = single; $("[data-lb-next]").hidden = single;
-    [idx - 1, idx + 1].forEach(function (k) { var q = cur.photos[(k + cur.photos.length) % cur.photos.length]; if (q) new Image().src = A.photoUrl(q.path); });
+    [idx - 1, idx + 1].forEach(function (k) { var q = cur.photos[(k + cur.photos.length) % cur.photos.length]; if (q) new Image().src = src(q); });
   }
   function openLightbox(k, from) { idx = k; lbFrom = from; (dlg.open ? dlg : document.body).appendChild(lb); lb.hidden = false; show(); $("[data-lb-close]").focus(); document.addEventListener("keydown", onKey, true); }
   function closeLightbox() { lb.hidden = true; document.removeEventListener("keydown", onKey, true); if (lbFrom) lbFrom.focus(); }
@@ -104,13 +112,13 @@
   document.addEventListener("click", function (ev) { var b = ev.target.closest("[data-open]"); if (b) openGallery(+b.getAttribute("data-open")); });
 
   if (!A.ready) {
-    up.innerHTML = '<div class="empty-state"><p><strong>Events are coming soon.</strong> Check back for upcoming events and photos, or <a href="./involved.html">get involved</a> now.</p></div>';
-    past.innerHTML = '<div class="empty-state"><p>Photos from REC 517 events will appear here.</p></div>';
+    EVENTS = BUILT_IN; render();
+    up.innerHTML = '<div class="empty-state"><p><strong>Upcoming events are coming soon.</strong> Check back, or <a href="./involved.html">get involved</a> to hear about them first.</p></div>';
     return;
   }
-  A.events().then(function (list) { EVENTS = (list || []).map(function (e) { e.photos = e.photos || []; return e; }); render(); })
+  A.events().then(function (list) { EVENTS = (list || []).map(function (e) { e.photos = e.photos || []; return e; }).concat(BUILT_IN); render(); })
     .catch(function () {
-      up.innerHTML = '<div class="empty-state"><p>Events couldn’t load right now. Please refresh the page in a minute.</p></div>';
-      past.innerHTML = "";
+      EVENTS = BUILT_IN; render();
+      up.innerHTML = '<div class="empty-state"><p>Upcoming events couldn’t load right now. Please refresh the page in a minute.</p></div>';
     });
 })();

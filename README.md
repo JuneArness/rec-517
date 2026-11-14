@@ -46,6 +46,9 @@ every page. A flat folder can't break that way. The files keep the prompt's name
 
 ## Events, photos and Get Involved (added Nov 2026)
 
+Past events built into the site (like Hollywood Golf Comes to Jackson, Sept 25, 2026) live in `data.js`, section 6, with their photos as `event-golf-2026-01.jpg` and so on. They show even before the database is connected. Add new events in the Admin page instead.
+
+
 | What | How it works |
 | --- | --- |
 | `events.html` | Upcoming events (soonest first) and past events with photo galleries. Tap an event for all its photos; full-screen viewer with swipe and arrow keys. |
