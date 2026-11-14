@@ -648,6 +648,13 @@ ol.timeline { list-style: none; margin: 0; padding: 0; }
 .section--white .event-card { background: var(--color-light); }
 .event-media { position: relative; aspect-ratio: 16 / 10; background: var(--color-dark-2); overflow: hidden; }
 .event-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--ease); }
+.event-media .event-backdrop { display: none; }
+/* Flyer covers (site standard): taller frame, whole flyer visible, blurred copy behind it */
+.event-media.is-poster { aspect-ratio: 4 / 5; }
+.event-media.is-poster .event-backdrop { display: block; position: absolute; inset: 0; filter: blur(22px) saturate(1.2) brightness(.55); transform: scale(1.15); }
+.event-media.is-poster .event-cover { position: relative; object-fit: contain; }
+.event-card:hover .event-media.is-poster .event-cover { transform: scale(1.02); }
+.event-card:hover .event-media .event-backdrop { transform: scale(1.15); }
 .event-card:hover .event-media img { transform: scale(1.04); }
 .event-ph { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-weight: 900; font-size: 4rem; color: transparent; -webkit-text-stroke: 1.5px rgba(82, 184, 191, .45); font-stretch: 115%; }
 .date-badge { position: absolute; left: 1rem; top: 1rem; display: flex; flex-direction: column; align-items: center; min-width: 58px; padding: .4rem .5rem .5rem; border-radius: 12px; background: var(--color-primary); color: var(--color-dark); font-family: var(--font-display); font-weight: 900; font-size: 1.6rem; line-height: 1; box-shadow: 0 8px 20px -8px rgba(0,0,0,.5); }

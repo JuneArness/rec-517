@@ -388,7 +388,8 @@ window.REC517 = {
      6. PAST EVENTS BUILT INTO THE SITE
      These show on the Events page even before the database is connected.
      New events should be added in the Admin page instead. Photos are files
-     in this folder. Use date: "YYYY-MM-DD", or when: "Summer 2026" if the date is unknown.
+     in this folder. The first photo (the event flyer) is the thumbnail.
+     Use date: "YYYY-MM-DD", or when: "Summer 2026" if the date is unknown.
      ------------------------------------------------------------------------ */
   pastEvents: [
     {
@@ -397,7 +398,9 @@ window.REC517 = {
       time: "Registration 8:00 AM",
       location: "Ella Sharp Park Golf Course, 1000 Ella Sharp Park Rd, Jackson, MI 49201",
       summary: "The REC 517 presented Hollywood Golf, featuring Mrs. Selina Johnson and Friends: a day of golf competition, networking, a vendor marketplace, prizes and giveaways, food and entertainment.",
+      // The first photo is the thumbnail. Standard for this site: put the event flyer first.
       photos: [
+        { src: "event-golf-2026-flyer.jpg", caption: "Event flyer: Hollywood Golf Comes to Jackson" },
         { src: "event-golf-2026-01.jpg", caption: "The youth press team" },
         { src: "event-golf-2026-02.jpg", caption: "Friends of REC 517 at the clubhouse" },
         { src: "event-golf-2026-03.jpg", caption: "Press passes and notebooks ready" },
@@ -408,8 +411,7 @@ window.REC517 = {
         { src: "event-golf-2026-08.jpg", caption: "Heading to the carts" },
         { src: "event-golf-2026-09.jpg", caption: "Inside the clubhouse" },
         { src: "event-golf-2026-10.jpg", caption: "Welcome remarks" },
-        { src: "event-golf-2026-11.jpg", caption: "Ready to tee off" },
-        { src: "event-golf-2026-flyer.jpg", caption: "The event flyer" }
+        { src: "event-golf-2026-11.jpg", caption: "Ready to tee off" }
       ]
     }
   ]

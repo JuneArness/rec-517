@@ -48,9 +48,11 @@ every page. A flat folder can't break that way. The files keep the prompt's name
 
 Past events built into the site (like Hollywood Golf Comes to Jackson, Sept 25, 2026) live in `data.js`, section 6, with their photos as `event-golf-2026-01.jpg` and so on. They show even before the database is connected. Add new events in the Admin page instead.
 
+**Site standard: the event flyer is the thumbnail.** In Admin, tap **Add flyer** first; it becomes the cover on the Events page and the first picture in the gallery. Tall flyers are shown whole, never cropped. For built-in events, list the flyer first in `photos`.
+
 ### After you upload changes
 
-Every page loads its scripts and styles with a version tag like `data.js?v=20261113`. Browsers keep old copies for a while, so after changing `data.js` or any `.js`/`.css` file, ask Claude to bump the version (or find-and-replace `v=20261113` with today's date in every `.html` file) so visitors get the new version right away.
+Every page loads its scripts and styles with a version tag like `data.js?v=20261113b`. Browsers keep old copies for a while, so after changing `data.js` or any `.js`/`.css` file, ask Claude to bump the version (or find-and-replace the `v=` tag with today's date in every `.html` file) so visitors get the new version right away.
 
 
 | What | How it works |

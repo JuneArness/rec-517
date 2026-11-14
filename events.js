@@ -24,13 +24,26 @@
     return { title: e.title || "", event_date: e.date || null, when: e.when || "", time_text: e.time || "", location: e.location || "",
       summary: e.summary || "", details: e.details || "", photos: (e.photos || []).filter(function (p) { return src(p); }) };
   }).filter(function (e) { return e.title; });
+  // Cover (the flyer, by site standard) always comes first in the gallery.
+  function coverFirst(e) {
+    if (!e.cover) return e.photos;
+    var c = e.photos.filter(function (p) { return p.path === e.cover; });
+    return c.concat(e.photos.filter(function (p) { return p.path !== e.cover; }));
+  }
+  // Flyers are tall: show the whole flyer over a soft blurred copy instead of cropping it.
+  function fitCovers(root) {
+    Array.prototype.forEach.call(root.querySelectorAll(".event-cover"), function (img) {
+      function fit() { if (img.naturalHeight > img.naturalWidth * 1.05) img.parentNode.classList.add("is-poster"); }
+      if (img.complete && img.naturalWidth) fit(); else img.addEventListener("load", fit);
+    });
+  }
   function isUpcoming(e) { var end = A.day(e.end_date) || A.day(e.event_date); return end && end >= today(); }
 
   function card(e, i, upcoming) {
     var d = A.day(e.event_date), cover = A.photoUrl(e.cover) || src(e.photos[0]), n = e.photos.length;
     var link = A.safeHttps(e.link_url);
     return '<article class="event-card' + (upcoming ? " is-upcoming" : "") + '">' +
-      '<div class="event-media">' + (cover ? '<img src="' + esc(cover) + '" alt="" loading="lazy" decoding="async">' : '<span class="event-ph" aria-hidden="true">517</span>') +
+      '<div class="event-media">' + (cover ? '<img class="event-backdrop" src="' + esc(cover) + '" alt="" aria-hidden="true" loading="lazy" decoding="async"><img class="event-cover" src="' + esc(cover) + '" alt="" loading="lazy" decoding="async">' : '<span class="event-ph" aria-hidden="true">517</span>') +
       (d ? '<span class="date-badge" aria-hidden="true"><b>' + d.toLocaleDateString("en-US", { month: "short" }) + '</b>' + d.getDate() + '</span>' : "") +
       (n ? '<span class="photo-count">' + CAM + n + " photo" + (n === 1 ? "" : "s") + "</span>" : "") + "</div>" +
       '<div class="event-body"><h3>' + esc(e.title) + "</h3>" +
@@ -52,12 +65,13 @@
       : '<div class="empty-state"><p><strong>No upcoming events posted yet.</strong> Check back soon, or <a href="./involved.html">get involved</a> to hear about them first.</p></div>';
     past.innerHTML = old.length ? old.map(function (x) { return card(x[0], x[1], false); }).join("")
       : '<div class="empty-state"><p>Photos from REC 517 events will appear here.</p></div>';
+    fitCovers(up); fitCovers(past);
   }
 
   /* ---------- gallery dialog ---------- */
   var dlg = $("#gallery"), grid = $("[data-gallery-grid]"), cur = null, lastFocus = null;
   function openGallery(i) {
-    var e = EVENTS[i]; if (!e) return; cur = e; lastFocus = document.activeElement;
+    var e = EVENTS[i]; if (!e) return; e.photos = coverFirst(e); cur = e; lastFocus = document.activeElement;
     $("#gallery-title").textContent = e.title;
     $("[data-gallery-meta]").textContent = [when(e), e.time_text, e.location].filter(Boolean).join(" · ");
     $("[data-gallery-details]").innerHTML = (e.details ? "<p>" + A.multiline(e.details) + "</p>" : e.summary ? "<p>" + esc(e.summary) + "</p>" : "");

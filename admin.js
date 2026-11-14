@@ -192,7 +192,7 @@
   var uploading = false;
   function alertUpload() { status(appStatus, "info", "Photos are still uploading. Please wait until they finish."); }
   window.addEventListener("beforeunload", function (e) { if (uploading) { e.preventDefault(); e.returnValue = ""; } });
-  function addFiles(list) {
+  function addFiles(list, asFlyer) {
     var files = Array.prototype.filter.call(list || [], function (f) { return /^image\//.test(f.type) || /\.(heic|heif)$/i.test(f.name); });
     var skipped = (list ? list.length : 0) - files.length;
     if (!EV || !files.length) { if (skipped) status(appStatus, "err", "Only photos can be added here."); return; }
@@ -214,11 +214,20 @@
     Promise.all([worker(), worker()]).then(function () {
       return done.length ? A.rpc("admin_add_photos", { p_event: EV.id, p_paths: done }) : null;
     }).then(function () { return refreshEvent(); }).then(function () {
+      if (!asFlyer || !done.length) return;
+      var fl = EV.photos.filter(function (p) { return p.path === done[0]; })[0];
+      if (!fl) return;
+      return A.rpc("admin_update_photo", { p_id: fl.id, p_caption: fl.caption || "Event flyer" })
+        .then(function () { return A.rpc("admin_set_cover", { p_event: EV.id, p_photo: fl.id }); })
+        .then(refreshEvent);
+    }).then(function () {
+      if (asFlyer && done.length) { txt.textContent = "Flyer added and set as the thumbnail."; flash("Flyer added. It’s now the thumbnail on the Events page." + (EV.published ? "" : " The event is still a draft; tick Published and save to show it.")); return; }
       txt.textContent = done.length + " photo" + (done.length === 1 ? "" : "s") + " added.";
       if (failed.length) status(appStatus, "err", "Some photos didn’t upload:<br>" + failed.map(esc).join("<br>"));
       else flash(done.length + " photo" + (done.length === 1 ? "" : "s") + " added." + (EV.published ? "" : " The event is still a draft; tick Published and save to show it."));
     }).catch(fail).then(function () { uploading = false; bar.style.width = "100%"; setTimeout(function () { q.hidden = true; }, 2500); });
   }
+  $("[data-flyer]").addEventListener("change", function (e) { addFiles(Array.prototype.slice.call(e.target.files, 0, 1), true); e.target.value = ""; });
   $("[data-pick]").addEventListener("change", function (e) { addFiles(e.target.files); e.target.value = ""; });
   $("[data-camera]").addEventListener("change", function (e) { addFiles(e.target.files); e.target.value = ""; });
   var drop = $("[data-drop]");
